@@ -65,6 +65,10 @@ public class RewardsService {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 
+	public int calculateRewardPoints(Attraction attraction, User user) {
+		return getRewardPoints(attraction, user);
+	}
+
 	public double getDistance(Location loc1, Location loc2) {
         double lat1 = Math.toRadians(loc1.latitude);
         double lon1 = Math.toRadians(loc1.longitude);
