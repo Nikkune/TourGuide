@@ -1,5 +1,7 @@
 package com.openclassrooms.tourguide.dto;
 
+import gpsUtil.location.Location;
+
 /**
  * Data Transfer Object for attraction information
  * Contains information about an attraction, its location, the user's location,
@@ -7,23 +9,18 @@ package com.openclassrooms.tourguide.dto;
  */
 public class AttractionDTO {
     private String attractionName;
-    private double attractionLatitude;
-    private double attractionLongitude;
-    private double userLatitude;
-    private double userLongitude;
+    private Location attractionLocation;
+    private Location userLocation;
     private double distance;
     private int rewardPoints;
 
     public AttractionDTO() {
     }
 
-    public AttractionDTO(String attractionName, double attractionLatitude, double attractionLongitude,
-                         double userLatitude, double userLongitude, double distance, int rewardPoints) {
+    public AttractionDTO(String attractionName, Location actrctionLocation, Location userLocation, double distance, int rewardPoints) {
         this.attractionName = attractionName;
-        this.attractionLatitude = attractionLatitude;
-        this.attractionLongitude = attractionLongitude;
-        this.userLatitude = userLatitude;
-        this.userLongitude = userLongitude;
+        this.attractionLocation = actrctionLocation;
+        this.userLocation = userLocation;
         this.distance = distance;
         this.rewardPoints = rewardPoints;
     }
@@ -36,36 +33,20 @@ public class AttractionDTO {
         this.attractionName = attractionName;
     }
 
-    public double getAttractionLatitude() {
-        return attractionLatitude;
+    public Location getAttractionLocation() {
+        return attractionLocation;
     }
 
-    public void setAttractionLatitude(double attractionLatitude) {
-        this.attractionLatitude = attractionLatitude;
+    public void setAttractionLocation(Location atractionLocation) {
+        this.attractionLocation = atractionLocation;
     }
 
-    public double getAttractionLongitude() {
-        return attractionLongitude;
+    public Location getUserLocation() {
+        return userLocation;
     }
 
-    public void setAttractionLongitude(double attractionLongitude) {
-        this.attractionLongitude = attractionLongitude;
-    }
-
-    public double getUserLatitude() {
-        return userLatitude;
-    }
-
-    public void setUserLatitude(double userLatitude) {
-        this.userLatitude = userLatitude;
-    }
-
-    public double getUserLongitude() {
-        return userLongitude;
-    }
-
-    public void setUserLongitude(double userLongitude) {
-        this.userLongitude = userLongitude;
+    public void setUserLocation(Location userLocation) {
+        this.userLocation = userLocation;
     }
 
     public double getDistance() {

@@ -2,6 +2,7 @@ package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,10 @@ public class RewardsService {
 		this.rewardsCentral = rewardCentral;
 	}
 
+	public RewardCentral getRewardsCentral() {
+		return rewardsCentral;
+	}
+
 	public void setProximityBuffer(int proximityBuffer) {
 		this.proximityBuffer = proximityBuffer;
 	}
@@ -38,8 +43,12 @@ public class RewardsService {
 	}
 
 	public void calculateRewards(User user) {
-		// Create a copy of the user's visited locations to avoid ConcurrentModificationException
-		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
+		/*
+		* Reason: When calculateRewards loop is running, the user's visitedLocations another thread can modify this one.
+		* This behavior is named: not thread-safe
+		* Solution: Create a copy of the visitedLocations list using CopyOnWriteArrayList who is thread-safe.
+		 */
+		List<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractions = gpsUtil.getAttractions();
 
 		for(VisitedLocation visitedLocation : userLocations) {
