@@ -11,6 +11,7 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -18,6 +19,7 @@ import tripPricer.TripPricer;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,6 +31,8 @@ public class TourGuideService {
     private final TripPricer tripPricer = new TripPricer();
     public final Tracker tracker;
     boolean testMode = true;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(100);
 
     public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
         this.gpsUtil = gpsUtil;
@@ -84,6 +88,32 @@ public class TourGuideService {
         user.addToVisitedLocations(visitedLocation);
         rewardsService.calculateRewards(user);
         return visitedLocation;
+    }
+
+    public Map<String, VisitedLocation> trackUsersLocation(List<User> users) {
+
+        Map<String, CompletableFuture<VisitedLocation>> futures = new HashMap<>();
+
+        users.forEach((user) -> {
+            futures.put(
+                    user.getUserName(),
+                    CompletableFuture.supplyAsync(
+                            () -> trackUserLocation(user)
+                            , executorService)
+            );
+        });
+
+        CompletableFuture.allOf(futures.values().toArray(new CompletableFuture[0])).join();
+
+        return futures
+                .entrySet()
+                .stream()
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> e.getValue().join()
+                        )
+                );
     }
 
     public List<AttractionDTO> getNearbyAttractions(VisitedLocation visitedLocation) {
