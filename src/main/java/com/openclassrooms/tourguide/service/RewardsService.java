@@ -14,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 @Service
 public class RewardsService {
@@ -78,7 +77,7 @@ public class RewardsService {
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
-        public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+    public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
         return getDistance(attraction, location) > attractionProximityRange ? false : true;
     }
 

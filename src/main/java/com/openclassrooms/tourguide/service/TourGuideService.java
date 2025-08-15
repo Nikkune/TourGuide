@@ -11,7 +11,6 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -19,7 +18,9 @@ import tripPricer.TripPricer;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
