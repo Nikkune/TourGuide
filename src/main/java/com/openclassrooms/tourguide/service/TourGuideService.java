@@ -91,6 +91,13 @@ public class TourGuideService {
         return visitedLocation;
     }
 
+    /**
+     * Tracks the locations for all users asynchronously and returns a map of their usernames
+     * and their corresponding visited locations.
+     *
+     * @param users a list of User objects whose locations need to be tracked
+     * @return a map where the key is the username of the user and the value is their tracked VisitedLocation
+     */
     public Map<String, VisitedLocation> trackUsersLocation(List<User> users) {
 
         Map<String, CompletableFuture<VisitedLocation>> futures = new HashMap<>();
@@ -117,6 +124,14 @@ public class TourGuideService {
                 );
     }
 
+    /**
+     * Retrieves a list of nearby attractions based on the user's last visited location.
+     * The attractions are sorted by proximity to the user's current location, with a limit of 5 closest attractions.
+     *
+     * @param visitedLocation the last visited location of the user, including their current geographical coordinates
+     * @return a list of {@link AttractionDTO} objects containing information about the closest attractions,
+     *         including their name, location, distance from the user, and reward points
+     */
     public List<AttractionDTO> getNearbyAttractions(VisitedLocation visitedLocation) {
         List<Attraction> attractions = gpsUtil.getAttractions();
         Location userLocation = visitedLocation.location;

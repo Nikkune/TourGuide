@@ -45,6 +45,19 @@ public class RewardsService {
         proximityBuffer = defaultProximityBuffer;
     }
 
+    /**
+     * Calculates the rewards for a given user by identifying attractions near the user's visited
+     * locations and awarding reward points if the user has not been rewarded for visiting the attraction.
+     *
+     * The method checks each visited location of the user against a list of attractions. If an attraction
+     * is close to a visited location, and the user has not yet been rewarded for that attraction,
+     * reward points are calculated and added to the user's rewards.
+     *
+     * Thread-safety is ensured for the user's visited locations list by creating a thread-safe copy of
+     * the list before iterating. Access to the user's rewards is synchronized to avoid concurrent modifications.
+     *
+     * @param user the user for whom rewards need to be calculated
+     */
     public void calculateRewards(User user) {
         /*
          * Reason: When calculateRewards loop is running, the user's visitedLocations another thread can modify this one.
@@ -69,6 +82,13 @@ public class RewardsService {
         }
     }
 
+    /**
+     * Calculates rewards for all users concurrently. This method processes the rewards
+     * for a list of given users by executing the reward calculation logic asynchronously
+     * for each user and waiting for all computations to complete.
+     *
+     * @param users the list of users for whom rewards need to be calculated
+     */
     public void calculateRewardsForAllUsers(List<User> users) {
         List<CompletableFuture<Void>> futures = users.stream()
                 .map(user -> CompletableFuture.runAsync(() -> calculateRewards(user), executorService))
